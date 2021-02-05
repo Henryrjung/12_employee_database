@@ -141,7 +141,44 @@ const addEmployee = () => {
   });
 };
 // add a new role to the database
-const addRole = () => {};
+const addRole = () => {
+    connection.query('select * FROM department', (err, results)=>{
+        if(err) throw err;
+        inquirer.prompt([
+            {
+                name: 'roleTitle',
+                type: 'input',
+                message: 'Please enter a title for your new role'
+            },
+            {
+                name: 'salary',
+                type: 'input',
+                message: 'Please enter the desired salary for your new role'
+            },
+            {
+                name: 'department',
+                type: 'list',
+                message: 'Please select the department this role belongs to',
+                choices: results.map(({name})=>name)
+            }
+        ]).then((answer)=>{
+            const {id} = results.find(({name})=>name===answer.department);
+            connection.query(
+                'INSERT INTO role SET ?',
+                {
+                    title: answer.roleTitle,
+                    salary: answer.salary,
+                    dept_id: id
+                },
+                (err)=>{
+                    if(err) throw err;
+                    console.log('New role added to the database');
+                    start();
+                }
+            );
+        });
+    })
+};
 // add a new department to the database
 const addDept = () => {};
 // update an current employees role
