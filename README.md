@@ -6,6 +6,7 @@
 
   ## Table of Contents
   * [Screenshot](#Screenshot)
+  * [Gif](#Gif) 
   * [Video](#Video)
   * [Installation](#installation)
   * [Usage](#usage)
@@ -15,7 +16,15 @@
 
   ## Screenshot 
 
+  ![Database Image](./assets/database.PNG)
+
+  ## Gif
+
+  ![Database Gif](./assets/12_employee_database.gif)
+
   ## Video
+
+  https://drive.google.com/file/d/1E7pK5HXn-6lriKMn3lmMm1nUUkrHbHfM/view
   
   ## Installation
 
