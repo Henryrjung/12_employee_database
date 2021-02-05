@@ -74,9 +74,21 @@ const viewEmployees = () => {
     };
 };
 // view list of all roles
-const viewRoles = () => {};
+const viewRoles = () => {
+    connection.query('SELECT * FROM role;', (err, results)=>{
+        if(err) throw err;
+        console.table(results);
+        start();
+    })
+};
 // view list of all departments
-const viewDept = () => {};
+const viewDept = () => {
+    connection.query('SELECT * FROM department;', (err, results)=>{
+        if(err) throw err;
+        console.table(results);
+        start();
+    })
+};
 // add an employee to the database
 const addEmployee = () => {};
 // add a new role to the database
