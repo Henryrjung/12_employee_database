@@ -90,7 +90,59 @@ const viewDept = () => {
     })
 };
 // add an employee to the database
-const addEmployee = () => {};
+const addEmployee = () => {
+    connection.query('SELECT * FROM employee', (err, roleInfo)=>{
+        connection.query('SELECT * FROM employee', (err, empData)=>{
+            if(err) throw err;
+            const employeeName = empData.map(({first_name, last_name})=>{
+                return first_name + ' ' + last_name
+            });
+            inquirer.prompt([
+                {
+                    name: 'firstName',
+                    type: 'input',
+                    message: 'Please enter the first name of your new employee'
+                },
+                {
+                    name: 'lastName',
+                    type: 'input',
+                    message: 'Please enter the last name of your new employee'
+                },
+                {
+                    name: 'role',
+                    type: 'list',
+                    message: 'Please select an available role for your new employee',
+                    choices: roleInfo.map(({title})=>title)
+                },
+                {
+                    name: 'manager',
+                    type: 'list',
+                    message: 'Please select an available manager for your new employee',
+                    choices: employeeName
+                },
+
+            ]).then((answer)=>{
+                var { id } = roleInfo.find(({title})=>title===answer.role);
+                const roleId = id;
+                var {id}=empData.find(({first_name,last_name})=>first_name+' '+last_name===answer.manager);
+                const managerId = id;
+                connection.query('INSERT INTO employee SET',
+                {
+                    first_name: answer.first_name,
+                    last_name: answer.last_name,
+                    role_id: roleId,
+                    managerId: managerId
+                },
+                (err)=>{
+                    if(err) throw err;
+                    console.log('New employee added to the database');
+                    start();
+                }
+                )
+            })
+        })
+    })
+};
 // add a new role to the database
 const addRole = () => {};
 // add a new department to the database
