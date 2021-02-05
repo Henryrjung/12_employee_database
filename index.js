@@ -16,7 +16,50 @@ connection.connect((err) =>{
     start();
 });
 //starts inquirer prompts
-const start=()=>{}
+const start=()=>{
+    inquirer.prompt({
+        name: 'prompts',
+        type: 'list',
+        message: 'Welcome to the employee database',
+        choices: [
+            'View All Employees',
+            'View All Roles',
+            'View All Departments',
+            'Update An Employee Role',
+            'Add An Employee',
+            'Add a Role',
+            'Add a Department',
+            'Finish'
+        ]
+    }).then((answer)=>{
+        switch(answer.prompts){
+            case 'View All Employees':
+                viewEmployees();
+                break;
+            case 'View All Roles':
+                viewRoles();
+                break;
+            case 'View All Departments':
+                viewDept();
+                break;
+            case 'Update An Employee Role':
+                updateRole();
+                break;
+            case 'Add An Employee':
+                addEmployee();
+                break;
+            case 'Add a Role':
+                addRole();
+                break;
+            case 'Add a Departmet':
+                addDept();
+                break;
+            case 'Finish':
+                connection.end();
+                break;
+        }
+    });
+}
 // view list of all employees
 const viewEmployees=()=>{}
 // view list of all roles
