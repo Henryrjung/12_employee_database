@@ -57,7 +57,7 @@ const start = () => {
 // view list of all employees
 const viewEmployees = () => {
   connection.query(
-    `SELECT concat(first_name,' ',last_name) as EmployeeName FROM employee;`,
+    `SELECT employee.id, role.title, department.name AS department, concat(first_name,' ',last_name) as EmployeeName FROM employee LEFT JOIN role ON employee.role_id = role.id LEFT JOIN department ON role.dept_id = department.id;`,
     (err, results) => {
       if (err) throw err;
       console.table(results);
@@ -206,4 +206,43 @@ const addDept = () => {
     });
 };
 // update an current employees role
-const updateRole = () => {};
+const updateRole = () => {
+    connection.query('SELECT * FROM role', (err, roleInfo)=>{
+        connection.query('SELECT * FROM employee', (err, empInfo)=>{
+            const employeeName = empInfo.map(({first_name,last_name})=>{
+                return first_name+' '+last_name
+            });
+            inquirer.prompt([
+                {
+                    name: 'employee',
+                    type: 'list',
+                    message: 'Please select an employee you wish to updated',
+                    choices: employeeName
+                },
+                {
+                    name: 'changeRole',
+                    type: 'list',
+                    message: 'Please select a new role from the available selection',
+                    choices: roleInfo.map(({title})=>title)
+                }
+            ]).then((answer)=>{
+                var {id} = empInfo.find(({first_name,last_name})=>first_name+' '+last_name===answer.employee);
+                const empId = id;
+                var {id} = roleInfo.find(({title}) => title === answer.changeRole);
+                const roleId = id;
+                connection.query('UPDATE employee SET ? WHERE ?',
+                [
+                    {
+                        role_id: roleId
+                    },
+                    {id: empId}
+                ],
+                (err)=>{
+                    if(err) throw err;
+                    console.log('Role updated');
+                    start();
+                })
+            })
+        })
+    })
+};
